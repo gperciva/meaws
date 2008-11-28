@@ -1,0 +1,366 @@
+<ui version="4.0" >
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>550</width>
+    <height>318</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>MainWindow</string>
+  </property>
+  <property name="windowIcon" >
+   <iconset resource="icons.qrc" >
+    <normaloff>:/icons/meaws.png</normaloff>:/icons/meaws.png</iconset>
+  </property>
+  <property name="animated" >
+   <bool>false</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>66</y>
+     <width>550</width>
+     <height>230</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout" >
+    <property name="margin" >
+     <number>0</number>
+    </property>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>550</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_User" >
+    <property name="title" >
+     <string>&amp;User</string>
+    </property>
+    <addaction name="action_New_User" />
+    <addaction name="action_Open_User" />
+    <addaction name="action_Save_User" />
+    <addaction name="action_Save_User_As" />
+    <addaction name="separator" />
+    <addaction name="action_User_Info" />
+    <addaction name="separator" />
+    <addaction name="action_Close_User" />
+    <addaction name="action_Quit_Meaws" />
+   </widget>
+   <widget class="QMenu" name="menu_Exercise" >
+    <property name="title" >
+     <string>Exercise</string>
+    </property>
+    <addaction name="action_Open_Game" />
+    <addaction name="action_Open_Single_Exercise" />
+    <addaction name="action_Close_Exercise" />
+    <addaction name="separator" />
+    <addaction name="action_Next_Exercise" />
+    <addaction name="action_Set_Tempo" />
+   </widget>
+   <widget class="QMenu" name="menu_Try" >
+    <property name="title" >
+     <string>&amp;Try</string>
+    </property>
+    <addaction name="action_Toggle_Try" />
+    <addaction name="separator" />
+    <addaction name="action_Previous_Try" />
+    <addaction name="action_Next_Try" />
+    <addaction name="action_Add_Try" />
+    <addaction name="action_Reset_Try" />
+    <addaction name="action_Delete_Try" />
+    <addaction name="separator" />
+    <addaction name="action_Open_Try" />
+   </widget>
+   <widget class="QMenu" name="menu_Help" >
+    <property name="title" >
+     <string>&amp;Help</string>
+    </property>
+    <property name="separatorsCollapsible" >
+     <bool>false</bool>
+    </property>
+    <addaction name="action_About_Meaws" />
+    <addaction name="action_About_Qt" />
+    <addaction name="action_About_Marsyas" />
+   </widget>
+   <addaction name="menu_User" />
+   <addaction name="menu_Exercise" />
+   <addaction name="menu_Try" />
+   <addaction name="menu_Help" />
+  </widget>
+  <widget class="QStatusBar" name="statusbar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>296</y>
+     <width>550</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="bar_User" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>22</y>
+     <width>151</width>
+     <height>44</height>
+    </rect>
+   </property>
+   <property name="windowTitle" >
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea" >
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak" >
+    <bool>false</bool>
+   </attribute>
+   <addaction name="action_New_User" />
+   <addaction name="action_Open_User" />
+   <addaction name="action_Save_User" />
+  </widget>
+  <widget class="QToolBar" name="bar_Exercise" >
+   <property name="geometry" >
+    <rect>
+     <x>151</x>
+     <y>22</y>
+     <width>105</width>
+     <height>44</height>
+    </rect>
+   </property>
+   <property name="windowTitle" >
+    <string>toolBar_2</string>
+   </property>
+   <attribute name="toolBarArea" >
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak" >
+    <bool>false</bool>
+   </attribute>
+   <addaction name="action_Open_Game" />
+   <addaction name="action_Open_Single_Exercise" />
+  </widget>
+  <widget class="QToolBar" name="bar_Try" >
+   <property name="geometry" >
+    <rect>
+     <x>256</x>
+     <y>22</y>
+     <width>294</width>
+     <height>44</height>
+    </rect>
+   </property>
+   <property name="windowTitle" >
+    <string>toolBar_4</string>
+   </property>
+   <attribute name="toolBarArea" >
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak" >
+    <bool>false</bool>
+   </attribute>
+   <addaction name="action_Toggle_Try" />
+  </widget>
+  <action name="action_New_User" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/new.png</normaloff>:/icons/new.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;New User</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="action_Open_User" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/open-user.png</normaloff>:/icons/open-user.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Open User</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="action_Save_User" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Save User</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="action_Save_User_As" >
+   <property name="text" >
+    <string>Save User &amp;As</string>
+   </property>
+  </action>
+  <action name="action_User_Info" >
+   <property name="text" >
+    <string>&amp;User Info</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+U</string>
+   </property>
+  </action>
+  <action name="action_Close_User" >
+   <property name="text" >
+    <string>&amp;Close User</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+W</string>
+   </property>
+  </action>
+  <action name="action_About_Qt" >
+   <property name="text" >
+    <string>About &amp;Qt</string>
+   </property>
+  </action>
+  <action name="action_About_Meaws" >
+   <property name="text" >
+    <string>About Meaws</string>
+   </property>
+  </action>
+  <action name="action_About_Marsyas" >
+   <property name="text" >
+    <string>About Marsyas</string>
+   </property>
+   <property name="menuRole" >
+    <enum>QAction::ApplicationSpecificRole</enum>
+   </property>
+  </action>
+  <action name="action_Using_Meaws" >
+   <property name="text" >
+    <string>Using Meaws</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+?</string>
+   </property>
+  </action>
+  <action name="action_Open_Game" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/open-game.png</normaloff>:/icons/open-game.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Open &amp;Game</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+G</string>
+   </property>
+  </action>
+  <action name="action_Open_Single_Exercise" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/open-exercise.png</normaloff>:/icons/open-exercise.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Open &amp;Single Exercise</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+E</string>
+   </property>
+  </action>
+  <action name="action_Toggle_Try" >
+   <property name="icon" >
+    <iconset resource="icons.qrc" >
+     <normaloff>:/icons/player_play.png</normaloff>:/icons/player_play.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Toggle Try</string>
+   </property>
+   <property name="shortcut" >
+    <string>Space</string>
+   </property>
+  </action>
+  <action name="action_Next_Exercise" >
+   <property name="text" >
+    <string>&amp;Next Exercise</string>
+   </property>
+   <property name="shortcut" >
+    <string>Return</string>
+   </property>
+  </action>
+  <action name="action_Previous_Try" >
+   <property name="text" >
+    <string>Previous Try</string>
+   </property>
+   <property name="shortcut" >
+    <string>Up</string>
+   </property>
+  </action>
+  <action name="action_Next_Try" >
+   <property name="text" >
+    <string>Next Try</string>
+   </property>
+   <property name="shortcut" >
+    <string>Down</string>
+   </property>
+  </action>
+  <action name="action_Add_Try" >
+   <property name="text" >
+    <string>Add Try</string>
+   </property>
+   <property name="shortcut" >
+    <string>A</string>
+   </property>
+  </action>
+  <action name="action_Reset_Try" >
+   <property name="text" >
+    <string>Reset Try</string>
+   </property>
+  </action>
+  <action name="action_Delete_Try" >
+   <property name="text" >
+    <string>Delete Try</string>
+   </property>
+   <property name="shortcut" >
+    <string>D</string>
+   </property>
+  </action>
+  <action name="action_Open_Try" >
+   <property name="text" >
+    <string>Open Try</string>
+   </property>
+  </action>
+  <action name="action_Set_Tempo" >
+   <property name="text" >
+    <string>Set Tempo</string>
+   </property>
+  </action>
+  <action name="action_Quit_Meaws" >
+   <property name="text" >
+    <string>&amp;Quit Meaws</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="action_Close_Exercise" >
+   <property name="text" >
+    <string>Close Game</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="icons.qrc" />
+ </resources>
+ <connections/>
+</ui>

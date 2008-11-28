@@ -1,0 +1,3 @@
+Icons are from Qt, used in accordance with this FAQ:
+http://trolltech.com/developer/faqs/faq.2007-01-12.9705572971?hotspoturl=http%3A//trolltech.com/developer/faqs
+
