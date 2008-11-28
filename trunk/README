@@ -1,0 +1,13 @@
+To get started on Linux/OSX, just do:
+
+qmake
+make
+make install
+
+The last command copies the data into the out/ directory.  It
+doesn't copy stuff to your system.
+
+
+Any brave souls attempting to compile this on windows will need to
+edit meaws.pro.
+
