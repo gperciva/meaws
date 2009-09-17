@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import sys
 import os
+import glob
 
 try:
   import_dir = sys.argv[1]
@@ -15,7 +16,7 @@ baseDir = os.path.abspath( baseDir )
 os.system("cp "+os.path.join(baseDir, "midi.py") + " /tmp/")
 
 def sort_string(a, b):
-  if ( int(a[:-3]) < int(b[:-3]) ):
+  if ( int(os.path.basename(a[:-3])) < int(os.path.basename(b[:-3])) ):
     return -1
   return 1
 
@@ -24,14 +25,14 @@ def addlevel(campaignfile, name, level, minbpm, maxbpm):
   campaignfile.write(name+'\n')
   campaignfile.write(str(minbpm)+'\n')
   campaignfile.write(str(maxbpm)+'\n')
-  files=os.listdir( os.path.join(import_dir, level) )
+  files=glob.glob( os.path.join(import_dir, level, "*.ly"))
   files.sort(sort_string)
   if not(os.path.exists(os.path.join(baseDir, "intonation", level))):
-    os.mkdir(os.path.join(baseDir, "intonation", level))
+    os.makedirs(os.path.join(baseDir, "intonation", level))
 #  os.chdir(os.path.join(baseDir, "intonation", level))
   os.chdir("/tmp")
   for file in files:
-    base = file[:-3]
+    base = os.path.basename(file[:-3])
     campaignfile.write( 'intonation/'+level+'/'+base+'.png\n' )
     #campaignfile.write( level+'/'+base+'.png\n' )
     ly = 'tmp-ly.ly'
