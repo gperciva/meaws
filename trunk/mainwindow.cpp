@@ -541,7 +541,7 @@ void MainWindow::grade(const char *exercise, const char *audioFile)
 	QString print(audioFile);
 	print.append("\t");
 	print.append( QString().setNum(exercise_->getTryScore()) );
-	qDebug(print.toAscii());
+//	qDebug(print.toAscii());
 }
 
 void MainWindow::setTempo(int tempo)
