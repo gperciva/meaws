@@ -33,13 +33,16 @@ for i in range(len(inlines)):
 				time += int( element[3:-1] )
 	if ( line.find("NOTE_ON") > 0 ):
 		splitline = line.split()
-		for element in splitline:
-			if ( element[:6] == 'pitch='):
-				pitch = int( element[7:-1] )
-				#onset = int( time * 44100.0/512.0/384.0 )
-				print str(pitch) + " " + str(time/384.0)
+		# disgusting hack!
+		is_silent = splitline[6][10]
+		if (is_silent == '9'):
+			for element in splitline:
+				if ( element[:6] == 'pitch='):
+					pitch = int( element[7:-1] )
+					#onset = int( time * 44100.0/512.0/384.0 )
+					print str(pitch) + " " + str(time/384.0)
 
-#onset = int( time * 44100.0/512.0/384.0 )
+###onset = int( time * 44100.0/512.0/384.0 )
 print str(0) + " " + str(time/384.0)
 
 
