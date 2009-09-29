@@ -1,107 +1,69 @@
-/*
-** Copyright (C) 1998-2006 George Tzanetakis <gtzan@cs.uvic.ca>
-** Copyright (C) 2009 Graham Percival <graham@percival-music.ca>
-**   (converted to C and made into a separate library)
-**
-** This program is free software; you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation; either version 2 of the License, or
-** (at your option) any later version.
-**
-** This program is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-** GNU General Public License for more details.
-**
-** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software
-** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-*/
-
 #include "monowav.h"
 #include <stdlib.h>
+#include <stdio.h>
 
-
-Monowav* monowav_writeOpen(const char *filename)
+typedef struct
 {
-	Monowav* data = malloc(sizeof(Monowav));
-	data->file = fopen(filename, "wb");
+	char riff[4];           // "RIFF"
+	signed int file_size;      // in bytes
 
-	data->written = 0;
+	char wave[4];           // "WAVE"
 
-	data->header.riff[0] = 'R';
-	data->header.riff[1] = 'I';
-	data->header.riff[2] = 'F';
-	data->header.riff[3] = 'F';
-
-	data->header.file_size = 44;
-
-	data->header.wave[0] = 'W';
-	data->header.wave[1] = 'A';
-	data->header.wave[2] = 'V';
-	data->header.wave[3] = 'E';
-
-	data->header.fmt[0] = 'f';
-	data->header.fmt[1] = 'm';
-	data->header.fmt[2] = 't';
-	data->header.fmt[3] = ' ';
-
-#if defined(BIGENDIAN)
-	data->header.chunk_size = ByteSwapLong(16);
-	data->header.format_tag = ByteSwapShort(1);
-	data->header.num_chans = ByteSwapShort(1);
-	data->header.sample_rate = ByteSwapLong(44100);
-	data->header.bytes_per_sec = ByteSwapLong(data->header.sample_rate * 2);
-	data->header.bytes_per_samp = ByteSwapShort(2);
-	data->header.bits_per_samp = ByteSwapShort(16);
-	data->header.data_length = ByteSwapLong(0);
-#else
-	data->header.chunk_size = 16;
-	data->header.format_tag = 1;
-	data->header.num_chans = 1;
-	data->header.sample_rate = 44100;
-	data->header.bytes_per_sec = data->header.sample_rate * 2;
-	data->header.bytes_per_samp = 2;
-	data->header.bits_per_samp = 16;
-	data->header.data_length = 0;
-#endif
-
-	data->header.data[0] = 'd';
-	data->header.data[1] = 'a';
-	data->header.data[2] = 't';
-	data->header.data[3] = 'a';
-
-	fwrite(&(data->header), 4, 11, data->file);
-
-	data->beginning = ftell(data->file);
-}
+	char fmt[4];            // "fmt "
+	signed int chunk_size;     // in bytes (16 for PCM)
+	signed short format_tag;     // 1=PCM, 2=ADPCM, 3=IEEE float, 6=A-Law, 7=Mu-Law
+	signed short num_chans;      // 1=mono, 2=stereo
+	signed int sample_rate;
+	signed int bytes_per_sec;
+	signed short bytes_per_samp; // 2=16-bit mono, 4=16-bit stereo
+	signed short bits_per_samp;
+	char data[4];           // "data"
+	signed int data_length;    // in bytes
+} WavHeader;
 
 
-
-int monowav_writeBuffer(Monowav* data,
-	const int *buffer, const int bufferLength)
+int monowav_write(const char *filename, const short *buffer,
+                  const unsigned long bufferLength)
 {
+	WavHeader header;
+	FILE *file = fopen(filename, "wb");
 
-/*
-	long fileSize;
-	fpos_ = ftell(sfp_);
+	header.riff[0] = 'R';
+	header.riff[1] = 'I';
+	header.riff[2] = 'F';
+	header.riff[3] = 'F';
 
-	// jump to start and write data size
-	fseek(sfp_, 40, SEEK_SET);
-	written_ += inSamples_;
-	fileSize = (written_ * 2 * nChannels_);
-#if defined(BIGENDIAN)
-	fileSize =    ByteSwapLong(fileSize);
-#endif
+	header.file_size = 44 + 2 * bufferLength;
 
-	fwrite(&fileSize, 4, 1, sfp_);
-	fseek(sfp_, fpos_, SEEK_SET);
+	header.wave[0] = 'W';
+	header.wave[1] = 'A';
+	header.wave[2] = 'V';
+	header.wave[3] = 'E';
 
-	putLinear16Swap(c, in);
-*/
+	header.fmt[0] = 'f';
+	header.fmt[1] = 'm';
+	header.fmt[2] = 't';
+	header.fmt[3] = ' ';
 
-	fclose(&(data->file));
-	free(data);
+	header.chunk_size = 16;
+	header.format_tag = 1;
+	header.num_chans = 1;
+	header.sample_rate = 44100;
+	header.bytes_per_sec = 2 * header.sample_rate;
+	header.bytes_per_samp = 2;
+	header.bits_per_samp = 16;
+	header.data_length = 0;
+
+	header.data[0] = 'd';
+	header.data[1] = 'a';
+	header.data[2] = 't';
+	header.data[3] = 'a';
+
+	fwrite(&header, 4, 11, file);
+
+	fwrite(buffer, sizeof(short), bufferLength, file);
+
+	fclose(file);
 	return 0;
 }
 
