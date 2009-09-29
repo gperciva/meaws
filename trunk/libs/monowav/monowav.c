@@ -19,59 +19,61 @@
 */
 
 #include "monowav.h"
+#include <stdlib.h>
 
-monowav* monowav_writeOpen(const char filename)
+
+Monowav* monowav_writeOpen(const char *filename)
 {
-	monowav* data = malloc(sizeof(monowav));
-	data.file = fopen(filename, "wb");
+	Monowav* data = malloc(sizeof(Monowav));
+	data->file = fopen(filename, "wb");
 
-	written_ = 0;
+	data->written = 0;
 
-	data.header.riff[0] = 'R';
-	data.header.riff[1] = 'I';
-	data.header.riff[2] = 'F';
-	data.header.riff[3] = 'F';
+	data->header.riff[0] = 'R';
+	data->header.riff[1] = 'I';
+	data->header.riff[2] = 'F';
+	data->header.riff[3] = 'F';
 
-	data.header.file_size = 44;
+	data->header.file_size = 44;
 
-	data.header.wave[0] = 'W';
-	data.header.wave[1] = 'A';
-	data.header.wave[2] = 'V';
-	data.header.wave[3] = 'E';
+	data->header.wave[0] = 'W';
+	data->header.wave[1] = 'A';
+	data->header.wave[2] = 'V';
+	data->header.wave[3] = 'E';
 
-	data.header.fmt[0] = 'f';
-	data.header.fmt[1] = 'm';
-	data.header.fmt[2] = 't';
-	data.header.fmt[3] = ' ';
+	data->header.fmt[0] = 'f';
+	data->header.fmt[1] = 'm';
+	data->header.fmt[2] = 't';
+	data->header.fmt[3] = ' ';
 
-#if defined(MARSYAS_BIGENDIAN)
-	data.header.chunk_size = ByteSwapLong(16);
-	data.header.format_tag = ByteSwapShort(1);
-	data.header.num_chans = ByteSwapShort((signed short)nChannels);
-	data.header.sample_rate = ByteSwapLong((mrs_natural)getctrl("mrs_real/israte")->to<mrs_real>());
-	data.header.bytes_per_sec = ByteSwapLong(data.header.sample_rate * 2);
-	data.header.bytes_per_samp = ByteSwapShort(2);
-	data.header.bits_per_samp = ByteSwapShort(16);
-	data.header.data_length = ByteSwapLong(0);
+#if defined(BIGENDIAN)
+	data->header.chunk_size = ByteSwapLong(16);
+	data->header.format_tag = ByteSwapShort(1);
+	data->header.num_chans = ByteSwapShort(1);
+	data->header.sample_rate = ByteSwapLong(44100);
+	data->header.bytes_per_sec = ByteSwapLong(data->header.sample_rate * 2);
+	data->header.bytes_per_samp = ByteSwapShort(2);
+	data->header.bits_per_samp = ByteSwapShort(16);
+	data->header.data_length = ByteSwapLong(0);
 #else
-	data.header.chunk_size = 16;
-	data.header.format_tag = 1;
-	data.header.num_chans = (signed short)nChannels;
-	data.header.sample_rate = (mrs_natural)getctrl("mrs_real/israte")->to<mrs_real>();
-	data.header.bytes_per_sec = data.header.sample_rate * 2;
-	data.header.bytes_per_samp = 2;
-	data.header.bits_per_samp = 16;
-	data.header.data_length = 0;
+	data->header.chunk_size = 16;
+	data->header.format_tag = 1;
+	data->header.num_chans = 1;
+	data->header.sample_rate = 44100;
+	data->header.bytes_per_sec = data->header.sample_rate * 2;
+	data->header.bytes_per_samp = 2;
+	data->header.bits_per_samp = 16;
+	data->header.data_length = 0;
 #endif
 
-	data.header.data[0] = 'd';
-	data.header.data[1] = 'a';
-	data.header.data[2] = 't';
-	data.header.data[3] = 'a';
+	data->header.data[0] = 'd';
+	data->header.data[1] = 'a';
+	data->header.data[2] = 't';
+	data->header.data[3] = 'a';
 
-	fwrite(&data.header, 4, 11, data.file);
+	fwrite(&(data->header), 4, 11, data->file);
 
-	beginning = ftell(sfp_);
+	data->beginning = ftell(data->file);
 }
 
 

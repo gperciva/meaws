@@ -17,9 +17,10 @@
 ** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
+#include <stdio.h>
 
 
-struct wavheader
+typedef struct
 {
 	char riff[4];           // "RIFF"
 	signed int file_size;      // in bytes
@@ -36,18 +37,18 @@ struct wavheader
 	signed short bits_per_samp;
 	char data[4];           // "data"
 	signed int data_length;    // in bytes
-};
+} Wavheader;
 
-struct monowav
+typedef struct
 {
-	wavheader header;
+	Wavheader header;
 	FILE* file;
 	unsigned long written;
 	unsigned long beginning;
-}
+} Monowav;
 
 
-monowav* monowav_writeOpen(const char *filename);
+Monowav* monowav_writeOpen(const char *filename);
 
 
 
