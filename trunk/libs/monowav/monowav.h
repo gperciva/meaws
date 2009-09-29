@@ -49,7 +49,8 @@ typedef struct
 
 
 Monowav* monowav_writeOpen(const char *filename);
-
+int monowav_writeBuffer(Monowav* data,
+	const int *buffer, const int bufferLength);
 
 
 
