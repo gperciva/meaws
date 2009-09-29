@@ -33,7 +33,7 @@ int monowav_write(const char *filename, const short *buffer,
 	header.riff[2] = 'F';
 	header.riff[3] = 'F';
 
-	header.file_size = 44 + 2 * bufferLength;
+	header.file_size = 2*bufferLength - 8;
 
 	header.wave[0] = 'W';
 	header.wave[1] = 'A';
@@ -52,12 +52,13 @@ int monowav_write(const char *filename, const short *buffer,
 	header.bytes_per_sec = 2 * header.sample_rate;
 	header.bytes_per_samp = 2;
 	header.bits_per_samp = 16;
-	header.data_length = 0;
 
 	header.data[0] = 'd';
 	header.data[1] = 'a';
 	header.data[2] = 't';
 	header.data[3] = 'a';
+
+	header.data_length = 2 * bufferLength;
 
 	fwrite(&header, 4, 11, file);
 
