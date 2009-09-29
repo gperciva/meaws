@@ -19,7 +19,7 @@
 */
 
 
-struct wavhdr
+struct wavheader
 {
 	char riff[4];           // "RIFF"
 	signed int file_size;      // in bytes
@@ -40,8 +40,10 @@ struct wavhdr
 
 struct monowav
 {
-	wavhdr hdr;
+	wavheader header;
 	FILE* file;
+	unsigned long written;
+	unsigned long beginning;
 }
 
 

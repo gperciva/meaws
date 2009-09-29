@@ -1,3 +1,3 @@
-astyle --style=ansi --indent=tab *.h *.cpp
+astyle --style=ansi --indent=tab *.h *.cpp *.c
 
 
