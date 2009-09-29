@@ -78,3 +78,31 @@ Monowav* monowav_writeOpen(const char *filename)
 
 
 
+int monowav_writeBuffer(Monowav* data,
+	const int *buffer, const int bufferLength)
+{
+
+/*
+	long fileSize;
+	fpos_ = ftell(sfp_);
+
+	// jump to start and write data size
+	fseek(sfp_, 40, SEEK_SET);
+	written_ += inSamples_;
+	fileSize = (written_ * 2 * nChannels_);
+#if defined(BIGENDIAN)
+	fileSize =    ByteSwapLong(fileSize);
+#endif
+
+	fwrite(&fileSize, 4, 1, sfp_);
+	fseek(sfp_, fpos_, SEEK_SET);
+
+	putLinear16Swap(c, in);
+*/
+
+	fclose(&(data->file));
+	free(data);
+	return 0;
+}
+
+

@@ -1,7 +1,7 @@
 main: testwav
 
 testwav: monowav.o testwav.c
-	gcc -o testwav monowav.o testwav.c
+	gcc -lm -o testwav monowav.o testwav.c
 
 
 clean:
