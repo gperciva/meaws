@@ -4,21 +4,19 @@
 
 typedef struct
 {
-	char riff[4];           // "RIFF"
-	signed int file_size;      // in bytes
-
-	char wave[4];           // "WAVE"
-
-	char fmt[4];            // "fmt "
-	signed int chunk_size;     // in bytes (16 for PCM)
-	signed short format_tag;     // 1=PCM, 2=ADPCM, 3=IEEE float, 6=A-Law, 7=Mu-Law
-	signed short num_chans;      // 1=mono, 2=stereo
+	char riff[4];
+	signed int file_size;
+	char wave[4];
+	char fmt[4];
+	signed int chunk_size;
+	signed short format_tag;
+	signed short num_chans;
 	signed int sample_rate;
 	signed int bytes_per_sec;
-	signed short bytes_per_samp; // 2=16-bit mono, 4=16-bit stereo
-	signed short bits_per_samp;
-	char data[4];           // "data"
-	signed int data_length;    // in bytes
+	signed short bytes_per_sample;
+	signed short bits_per_sample;
+	char data[4];
+	signed int data_length;
 } WavHeader;
 
 
@@ -50,8 +48,8 @@ int monowav_write(const char *filename, const short *buffer,
 	header.num_chans = 1;
 	header.sample_rate = 44100;
 	header.bytes_per_sec = 2 * header.sample_rate;
-	header.bytes_per_samp = 2;
-	header.bits_per_samp = 16;
+	header.bytes_per_sample = 2;
+	header.bits_per_sample = 16;
 
 	header.data[0] = 'd';
 	header.data[1] = 'a';
@@ -63,6 +61,23 @@ int monowav_write(const char *filename, const short *buffer,
 	fwrite(&header, 4, 11, file);
 
 	fwrite(buffer, sizeof(short), bufferLength, file);
+
+	fclose(file);
+	return 0;
+}
+
+int monowav_read(const char *filename, short *buffer,
+                 unsigned long *bufferLength)
+{
+	FILE *file = fopen(filename, "rb");
+
+	signed int file_size;
+	fseek(file, 40, SEEK_SET);
+	fread(&file_size, 4, 1, file);
+
+	*bufferLength = file_size / 2;
+	buffer = malloc( sizeof(short) * (*bufferLength));
+	fread(buffer, sizeof(short), *bufferLength, file);
 
 	fclose(file);
 	return 0;
