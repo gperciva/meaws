@@ -17,7 +17,7 @@
 */
 
 #include "audio-backend.h"
-#include <sndfile.hh>
+#include "libs/monowav/monowav.h"
 
 //#include <stdio.h>
 //using namespace std;
@@ -71,6 +71,21 @@ bool AudioBackend::loadFile(QString filename)
 {
 	reset();
 
+	short *buffer;
+	// only done to stop a compiler warning; it's overwritten in read
+	buffer = 0;
+	unsigned long bufferLength;
+	int result = monowav_read(filename.toAscii(), buffer, &bufferLength);
+	if (result == MONOWAV_OK) {
+		// convert to our special audio storage
+		audioData_.totalFrames = bufferLength;
+		for (unsigned long i=0; i<bufferLength; i++) {
+			audioData_.buffer[i] = buffer[i];
+		}
+		free(buffer);
+	}
+
+/*
 	SndfileHandle infile(filename.toAscii());
 	if (not infile)
 	{
@@ -98,6 +113,7 @@ bool AudioBackend::loadFile(QString filename)
 		        "Error reading sound file.");
 		return false;
 	}
+*/
 	normalize();
 	hasAudio_ = true;
 	filename_ = filename;
@@ -178,6 +194,8 @@ void AudioBackend::stop()
 		audioData_.totalFrames = audioData_.frameCounter;
 
 		// write wav file
+// zzz
+/*
 		SndfileHandle outfile(filename_.toAscii(),
 		        SFM_WRITE, SF_FORMAT_WAV | SF_FORMAT_FLOAT,
 		        1, 44100);
@@ -190,6 +208,7 @@ void AudioBackend::stop()
 		}
 
 		outfile.write(audioData_.buffer, audioData_.totalFrames);
+*/
 
 		normalize();
 		hasAudio_ = true;

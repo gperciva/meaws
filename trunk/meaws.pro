@@ -41,6 +41,9 @@ SOURCES += rhythm-display-amps.cpp rhythm-display-lines.cpp
 HEADERS += libs/RtAudio/RtAudio.h
 SOURCES += libs/RtAudio/RtAudio.cpp
 
+HEADERS += libs/monowav/monowav.h
+SOURCES += libs/monowav/monowav.c
+
 
 ## app icon
 macx {
@@ -56,12 +59,8 @@ unix: !macx:DEFINES += __LINUX_ALSA__
 win32:DEFINES += __WINDOWS_DS__
 
 
-#LIBPATH += /usr/local/Trolltech/Qt-4.4.0/lib/
-LIBS += -lsndfile -laubio -lfftw3
+LIBS += -laubio -lfftw3
 #unix:!macx:LIBS += -static
-
-#INCLUDEPATH += /opt/local/include/
-#LIBPATH += /opt/local/lib/
 
 
 unix:!macx:LIBS += -lasound
