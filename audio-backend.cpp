@@ -17,7 +17,9 @@
 */
 
 #include "audio-backend.h"
-#include "libs/monowav/monowav.h"
+extern "C" {
+  #include "libs/monowav/monowav.h"
+}
 
 //#include <stdio.h>
 //using namespace std;
