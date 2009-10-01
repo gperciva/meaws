@@ -20,8 +20,7 @@ typedef struct
 } WavHeader;
 
 
-int monowav_write(const char *filename, const short *buffer,
-                  const unsigned long bufferLength)
+int monowav_write(const char *filename, monowav_sound *sound)
 {
 	WavHeader header;
 	FILE *file = fopen(filename, "wb");
@@ -31,7 +30,7 @@ int monowav_write(const char *filename, const short *buffer,
 	header.riff[2] = 'F';
 	header.riff[3] = 'F';
 
-	header.file_size = 2*bufferLength - 8;
+	header.file_size = 2 * sound->length - 8;
 
 	header.wave[0] = 'W';
 	header.wave[1] = 'A';
@@ -56,31 +55,32 @@ int monowav_write(const char *filename, const short *buffer,
 	header.data[2] = 't';
 	header.data[3] = 'a';
 
-	header.data_length = 2 * bufferLength;
+	header.data_length = 2 * sound->length;
 
 	fwrite(&header, 4, 11, file);
 
-	fwrite(buffer, sizeof(short), bufferLength, file);
+	fwrite(sound->buffer, 2, sound->length, file);
 
 	fclose(file);
 	return 0;
 }
 
-int monowav_read(const char *filename, short *buffer,
-                 unsigned long *bufferLength)
+monowav_sound* monowav_read(const char *filename)
 {
+	monowav_sound* sound;
+        sound = malloc(sizeof(monowav_sound));
 	FILE *file = fopen(filename, "rb");
 
 	signed int file_size;
 	fseek(file, 40, SEEK_SET);
 	fread(&file_size, 4, 1, file);
 
-	*bufferLength = file_size / 2;
-	buffer = malloc( sizeof(short) * (*bufferLength));
-	fread(buffer, sizeof(short), *bufferLength, file);
+	sound->length = file_size / 2;
+	sound->buffer = malloc( 2 * sound->length);
+	fread(sound->buffer, 2, sound->length, file);
 
 	fclose(file);
-	return 0;
+	return sound;
 }
 
 
