@@ -1,8 +1,19 @@
+#ifdef __cplusplus
+extern "C" {
+#endif 
+
 #define MONOWAV_OK 0
 #define MONOWAV_ERROR 1
 
-int monowav_write(const char *filename, const short *buffer,
-                  const unsigned long bufferLength);
-int monowav_read(const char *filename, short *buffer,
-                 unsigned long *bufferLength);
+typedef struct {
+	short *buffer;
+	int length;
+	int status;
+} monowav_sound;
 
+int monowav_write(const char *filename, monowav_sound *info);
+monowav_sound* monowav_read(const char *filename);
+
+#ifdef __cplusplus
+}
+#endif 
