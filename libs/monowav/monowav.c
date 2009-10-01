@@ -80,6 +80,7 @@ monowav_sound* monowav_read(const char *filename)
 	fread(sound->buffer, 2, sound->length, file);
 
 	fclose(file);
+	sound->status = MONOWAV_OK;
 	return sound;
 }
 

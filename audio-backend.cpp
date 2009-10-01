@@ -17,12 +17,10 @@
 */
 
 #include "audio-backend.h"
-extern "C" {
-  #include "libs/monowav/monowav.h"
-}
+#include "libs/monowav/monowav.h"
 
-//#include <stdio.h>
-//using namespace std;
+#include <stdio.h>
+using namespace std;
 
 /*   ***************************
  *   ***                     ***
@@ -73,19 +71,22 @@ bool AudioBackend::loadFile(QString filename)
 {
 	reset();
 
-	short *buffer;
 	// only done to stop a compiler warning; it's overwritten in read
-	buffer = 0;
-	unsigned long bufferLength;
-	int result = monowav_read(filename.toAscii(), buffer, &bufferLength);
-	if (result == MONOWAV_OK) {
+	monowav_sound *sound;
+	sound = monowav_read(filename.toAscii());
+	qDebug("finished read");
+	if (sound->status == MONOWAV_OK) {
 		// convert to our special audio storage
-		audioData_.totalFrames = bufferLength;
-		for (unsigned long i=0; i<bufferLength; i++) {
-			audioData_.buffer[i] = buffer[i];
+		audioData_.totalFrames = sound->length;
+		unsigned long totalBytes = audioData_.totalFrames * sizeof( AUDIO_TYPE );
+		audioData_.buffer = (AUDIO_TYPE*) malloc( totalBytes );
+		for (int i=0; i<sound->length; i++) {
+			audioData_.buffer[i] = sound->buffer[i];
 		}
-		free(buffer);
+		free(sound->buffer);
 	}
+	free(sound);
+	qDebug("finished copy");
 
 /*
 	SndfileHandle infile(filename.toAscii());
@@ -117,6 +118,7 @@ bool AudioBackend::loadFile(QString filename)
 	}
 */
 	normalize();
+	qDebug("done normalize");
 	hasAudio_ = true;
 	filename_ = filename;
 	return true;
