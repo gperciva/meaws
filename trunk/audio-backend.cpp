@@ -197,8 +197,17 @@ void AudioBackend::stop()
 			adc_.closeStream();
 		audioData_.totalFrames = audioData_.frameCounter;
 
+		// convert to our special audio storage
+		monowav_sound *sound = (monowav_sound*) malloc(sizeof(sound));
+		sound->length = audioData_.totalFrames;
+		sound->buffer = (short*) malloc(2 * sound->length);
+		for (int i=0; i<sound->length; i++) {
+			sound->buffer[i] = (short) ((AUDIO_TYPE) audioData_.buffer[i] * SHRT_MAX);
+		}
 		// write wav file
-// zzz
+		int result = monowav_write(filename_.toAscii(), sound);
+		free(sound->buffer);
+		free(sound);
 /*
 		SndfileHandle outfile(filename_.toAscii(),
 		        SFM_WRITE, SF_FORMAT_WAV | SF_FORMAT_FLOAT,
