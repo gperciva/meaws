@@ -27,7 +27,6 @@
 #include <QVector>
 #include <qalgorithms.h>
 #include <math.h>
-#include <aubio/aubio.h>
 
 #include "defs.h"
 #include "user.h"
