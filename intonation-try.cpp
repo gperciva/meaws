@@ -16,11 +16,13 @@
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
+#include "intonation-try.h"
+//#include "Transcriber.h"
+#include <aubio/aubio.h>
+
 #include <iostream>
 using namespace std;
 
-#include "intonation-try.h"
-//#include "Transcriber.h"
 
 #define SCALE 50.0
 #define WINDOWSIZE 1024
