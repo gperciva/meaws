@@ -89,35 +89,6 @@ bool AudioBackend::loadFile(QString filename)
 	free(sound->buffer);
 	free(sound);
 
-/*
-	SndfileHandle infile(filename.toAscii());
-	if (not infile)
-	{
-		QMessageBox::critical(NULL, "Cannot open file",
-		        "Cannot open file " + filename);
-		return false;
-	}
-
-	audioData_.totalFrames = infile.frames();
-
-	sf_count_t totalBytes = audioData_.totalFrames * sizeof( AUDIO_TYPE );
-	audioData_.buffer = 0;
-	audioData_.buffer = (AUDIO_TYPE*) malloc( totalBytes );
-	if ( audioData_.buffer == 0 )
-	{
-		QMessageBox::critical(NULL, "Memory error",
-		        "Cannot allocate memory for audio buffer.");
-		return false;
-	}
-
-	if (audioData_.totalFrames != infile.read(audioData_.buffer,
-	        audioData_.totalFrames ))
-	{
-		QMessageBox::critical(NULL, "Cannot load sound file",
-		        "Error reading sound file.");
-		return false;
-	}
-*/
 	normalize();
 	hasAudio_ = true;
 	filename_ = filename;
@@ -206,22 +177,15 @@ void AudioBackend::stop()
 		}
 		// write wav file
 		int result = monowav_write(filename_.toAscii(), sound);
-		free(sound->buffer);
-		free(sound);
-/*
-		SndfileHandle outfile(filename_.toAscii(),
-		        SFM_WRITE, SF_FORMAT_WAV | SF_FORMAT_FLOAT,
-		        1, 44100);
-		if (not outfile)
+		if (result != MONOWAV_OK)
 		{
 			QMessageBox::critical(NULL, "Cannot open file",
 			        "Cannot write to file " + filename_);
 			// FIXME: handle more gracefully
 			exit(1);
 		}
-
-		outfile.write(audioData_.buffer, audioData_.totalFrames);
-*/
+		free(sound->buffer);
+		free(sound);
 
 		normalize();
 		hasAudio_ = true;
