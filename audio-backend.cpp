@@ -71,22 +71,23 @@ bool AudioBackend::loadFile(QString filename)
 {
 	reset();
 
-	// only done to stop a compiler warning; it's overwritten in read
 	monowav_sound *sound;
 	sound = monowav_read(filename.toAscii());
-	qDebug("finished read");
-	if (sound->status == MONOWAV_OK) {
-		// convert to our special audio storage
-		audioData_.totalFrames = sound->length;
-		unsigned long totalBytes = audioData_.totalFrames * sizeof( AUDIO_TYPE );
-		audioData_.buffer = (AUDIO_TYPE*) malloc( totalBytes );
-		for (int i=0; i<sound->length; i++) {
-			audioData_.buffer[i] = sound->buffer[i];
-		}
-		free(sound->buffer);
+	if (sound->status != MONOWAV_OK) {
+		QMessageBox::critical(NULL, "Cannot open file",
+		        "Cannot open file " + filename);
+		return false;
 	}
+	// convert to our special audio storage
+	audioData_.totalFrames = sound->length;
+	unsigned long totalBytes = audioData_.totalFrames * sizeof( AUDIO_TYPE );
+	audioData_.buffer = (AUDIO_TYPE*) malloc( totalBytes );
+	for (int i=0; i<sound->length; i++) {
+		audioData_.buffer[i] = ((AUDIO_TYPE) sound->buffer[i] / (AUDIO_TYPE) SHRT_MAX);
+		cout<<audioData_.buffer[i]<<endl;
+	}
+	free(sound->buffer);
 	free(sound);
-	qDebug("finished copy");
 
 /*
 	SndfileHandle infile(filename.toAscii());
@@ -118,7 +119,6 @@ bool AudioBackend::loadFile(QString filename)
 	}
 */
 	normalize();
-	qDebug("done normalize");
 	hasAudio_ = true;
 	filename_ = filename;
 	return true;
