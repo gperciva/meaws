@@ -18,6 +18,7 @@
 
 #include "audio-backend.h"
 #include "libs/monowav/monowav.h"
+#include "limits.h"
 
 #include <stdio.h>
 using namespace std;
