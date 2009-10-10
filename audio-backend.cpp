@@ -85,7 +85,6 @@ bool AudioBackend::loadFile(QString filename)
 	audioData_.buffer = (AUDIO_TYPE*) malloc( totalBytes );
 	for (int i=0; i<sound->length; i++) {
 		audioData_.buffer[i] = ((AUDIO_TYPE) sound->buffer[i] / (AUDIO_TYPE) SHRT_MAX);
-		cout<<audioData_.buffer[i]<<endl;
 	}
 	free(sound->buffer);
 	free(sound);
