@@ -18,6 +18,7 @@
 
 #include "intonation-try.h"
 //#include "Transcriber.h"
+#define AUBIO_UNSTABLE 1
 #include <aubio/aubio.h>
 
 #include <iostream>
@@ -97,14 +98,12 @@ bool IntonationTry::processAudio(AudioData *audioData) {
 	                  WINDOWSIZE/HOPSIZE;
 	pitches_.resize( totalFrames );
 
-	aubio_pitchdetection_t *o = new_aubio_pitchdetection(
-	                                WINDOWSIZE, HOPSIZE, 1, 44100,
-	                                aubio_pitch_yinfft,
-	                                aubio_pitchm_midi
-	                            );
+	aubio_pitch_t *o = new_aubio_pitch((char_t*)"yinfft", WINDOWSIZE,
+				HOPSIZE, 1, 44100);
 
 	fvec_t *in = new_fvec(WINDOWSIZE, 1);
 	float *pread;
+	fvec_t *pitch_result = new_fvec(1,1);
 
 	for (int i=0; i<pitches_.size(); i++) {
 		double rms = 0.0;
@@ -114,13 +113,18 @@ bool IntonationTry::processAudio(AudioData *audioData) {
 			rms += (*val) * (*val);
 			pread[j] = audioData->buffer[HOPSIZE*i+j];
 		}
-		if (rms > RMS_SILENCE)
-			pitches_[i] = aubio_pitchdetection(o,in);
-		else
+		if (rms > RMS_SILENCE) {
+			aubio_pitch_do(o,in,pitch_result);
+			smpl_t pitch_freq = fvec_get_data(pitch_result)[0][0];
+			pitches_[i] = aubio_freqtomidi(pitch_freq);
+		} else {
 			pitches_[i] = 0;
+		}
 	}
 
-	del_aubio_pitchdetection(o);
+	del_fvec(in);
+	del_fvec(pitch_result);
+	del_aubio_pitch(o);
 	aubio_cleanup();
 
 	popupDisplay_->setData(pitches_);
